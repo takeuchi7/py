@@ -14,7 +14,7 @@ import numpy as np
 from scipy.optimize import minimize
 
 #最小化：隣接同士と、入力の遷移を観測値と捉えていく
-def func(X,x,y,c,w0,w1,w2,low_node,high_node):
+def func(X,x,y,c,w0,w1,w2,low_node,high_node,opt,z_1):
     e = math.e
     E=0
     p=x*y
@@ -28,20 +28,14 @@ def func(X,x,y,c,w0,w1,w2,low_node,high_node):
             p+=1
     for i in range(x*y):
         if(low_node[i]!=None):
-            w=1 / (1 + e**((-1)*(w0)*0.1))
-            E+=w*(X[i]-low_node[i])**2
-    for i in range(x*y):
+            #w=1 / (1 + e**((-1)*(w0)*0.1))
+            E+=w0*(X[i]-low_node[i])**2
         if(high_node[i]!=None):
             E+=w1*(X[i]-high_node[i])**2
-
-#   p=x*y
-#    for i in range(x-1):
-#        for j in range(y-1):
-#            E+=(X[i+p+(j*(x-1))]-X[i+p+(j*(x-1))+(x-1)])**2
-#
-#    p=x*y+(x-1)*y
-#    for i in range(x-1):
-#        for j in range(y-1):
-#            E+=(X[i+p+(j*(y-1))]-X[i+p+(j*(y-1))+(y-1)])**2
+            
+    for i in range(x*y):
+        N = np.random.normal(opt[z_1[i]]['mu'],opt[z_1[i]]['sigma'])
+        #print('{0}番目のガウス：{1}'.format(i,N))
+        E+=0.01*(X[i]-N)**2
 
     return E
